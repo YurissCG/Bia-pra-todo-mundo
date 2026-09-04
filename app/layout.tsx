@@ -33,6 +33,10 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
+// Marca <html class="js"> (usado pelo Reveal) e captura o _fbc a partir do
+// fbclid o quanto antes — é o parâmetro de pareamento mais forte e o mais
+// fácil de perder. Roda antes do Pixel carregar (que também tentaria fazer
+// isso, mas depois).
 const attrCapture = `document.documentElement.classList.add('js');
 (function(){try{
 var p=new URLSearchParams(location.search);
@@ -40,9 +44,6 @@ var fbclid=p.get('fbclid');
 var ck=document.cookie.split('; ');
 function get(n){var f=ck.find(function(r){return r.indexOf(n+'=')===0});return f?f.split('=')[1]:null}
 if(fbclid && !get('_fbc')){document.cookie='_fbc=fb.1.'+Date.now()+'.'+fbclid+'; max-age=31536000; path=/; samesite=lax'}
-var keep={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=p.get(k);if(v)keep[k]=v});
-if(fbclid)keep.fbclid=fbclid;
-if(Object.keys(keep).length)try{sessionStorage.setItem('bia_attr',JSON.stringify(keep))}catch(e){}
 }catch(e){}})();`;
 
 const pixelBoot = `!function(f,b,e,v,n,t,s)

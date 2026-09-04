@@ -5,7 +5,7 @@ const steps = [
     n: "1",
     titulo: "entra",
     texto:
-      "nome e whatsapp, sem custo. o link do grupo abre na hora, assim que você envia.",
+      "clica no botão e o link do grupo abre direto no seu whatsapp. sem cadastro.",
   },
   {
     n: "2",

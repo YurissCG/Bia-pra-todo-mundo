@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
-import { openLeadForm } from "./CtaButton";
+import { WHATSAPP_GROUP_URL } from "@/lib/config";
+import { fireContactEvent } from "@/lib/track";
 
 /**
  * CTA fixo na base — só no mobile, e só depois que o usuário passa do
@@ -42,14 +43,16 @@ export function StickyCta() {
           : "pointer-events-none translate-y-full opacity-0"
       }`}
     >
-      <button
-        type="button"
-        onClick={() => openLeadForm("sticky")}
+      <a
+        href={WHATSAPP_GROUP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => fireContactEvent("sticky")}
         className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-wa px-6 py-4 text-lg font-bold text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,0.6)] transition-transform duration-150 active:scale-[0.98] min-h-[56px]"
       >
         <WhatsAppIcon className="h-6 w-6 shrink-0" />
         <span>entrar no grupo</span>
-      </button>
+      </a>
     </div>
   );
 }

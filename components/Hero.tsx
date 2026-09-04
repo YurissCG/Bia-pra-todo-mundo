@@ -26,7 +26,7 @@ export function Hero() {
       <div className="mt-5">
         <CtaButton source="hero">quero entrar no grupo</CtaButton>
         <p className="mt-2 text-center text-xs text-ameixa/55">
-          nome e whatsapp, sem custo. o link abre na hora.
+          é grátis. o link abre direto no seu whatsapp.
         </p>
       </div>
 

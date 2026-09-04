@@ -6,7 +6,6 @@ import { SocialProof } from "@/components/SocialProof";
 import { Footer } from "@/components/Footer";
 import { CtaButton } from "@/components/CtaButton";
 import { StickyCta } from "@/components/StickyCta";
-import { LeadForm } from "@/components/LeadForm";
 import { Reveal } from "@/components/Reveal";
 
 export default function Page() {
@@ -61,7 +60,7 @@ export default function Page() {
             <Reveal delay={140} className="mx-auto mt-6 max-w-sm">
               <CtaButton source="cta3">quero entrar no grupo</CtaButton>
               <p className="mt-2 text-center text-xs text-white/75">
-                grátis · sem spam · o link do grupo abre na hora
+                grátis · sem cadastro · abre direto no whatsapp
               </p>
             </Reveal>
           </div>
@@ -71,7 +70,6 @@ export default function Page() {
       <Footer />
 
       <StickyCta />
-      <LeadForm />
     </>
   );
 }

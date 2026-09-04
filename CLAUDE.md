@@ -1,5 +1,30 @@
 # Bia Serra — Landing Page de captura
 
+> ## ⚠️ Amendment — 4 de setembro de 2026
+>
+> **Decisão do dono do projeto, em conversa, revertendo a arquitetura abaixo:**
+> o formulário de captura (nome + WhatsApp) foi **removido**. O botão de CTA
+> agora abre o WhatsApp direto — prioriza velocidade/conversão sobre a lista de
+> contatos própria descrita logo abaixo em "A LP não é vaidade".
+>
+> Consequência assumida: **não existe mais lista de contatos** (se o número do
+> grupo cair, não tem backup de quem entrou) e o Meta não recebe mais o evento
+> `Lead` pareado com telefone/nome hasheados. O que existe agora: `PageView`
+> (carregamento) e `Contact` (clique no CTA) via Pixel **e** Conversions API,
+> deduplicados pelo mesmo `event_id` — sem dado pessoal, só `fbc`/`fbp`/IP/UA.
+> Ver [`lib/track.ts`](./lib/track.ts), [`lib/meta.ts`](./lib/meta.ts) e
+> [`app/api/track/route.ts`](./app/api/track/route.ts).
+>
+> Todo o resto deste documento — a seção "Rastreamento Meta", o "Fluxo completo
+> de um lead", o item 9 da "Estrutura da página" (formulário), Supabase, LGPD de
+> formulário — **descreve a arquitetura antiga e não está mais em vigor**. Fica
+> registrado como histórico e caminho de volta: o código removido está nos
+> commits do GitHub anteriores a essa data, caso um dia valha reconsiderar (por
+> exemplo, se o custo por lead subir demais sem qualificação nenhuma).
+>
+> Se for reescrever este `CLAUDE.md` do zero, é essa versão — sem formulário —
+> que deve virar a fonte da verdade.
+
 ## O que é este projeto
 
 Landing page de uma tela que recebe tráfego pago do Meta, captura nome e WhatsApp,
