@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  /* paleta — framboesa e coral existem pra gritar. sem versão pastel. */
+  --color-framboesa: #e8215b;
+  --color-coral: #ff6b35;
+  --color-creme: #fff4e8;
+  --color-ameixa: #2d1526;
+  --color-wa: #25d366;
+  --color-wa-dark: #1ab155;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-archivo), "Archivo Black", ui-sans-serif, system-ui,
+    sans-serif;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-ameixa);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400; /* Archivo Black já é pesada */
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  p {
+    overflow-wrap: break-word;
+  }
+
+  ::selection {
+    background: var(--color-framboesa);
+    color: #fff;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ── motion: responde ao scroll, sem biblioteca ───────────────────── */
+/* Conteúdo é visível por padrão. Só some quando o JS está ativo
+   (html.js), e mesmo assim tem timeout de segurança no Reveal.tsx. */
+.reveal {
+  opacity: 1;
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s var(--ease-brand),
+    transform 0.6s var(--ease-brand);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.sheet-enter {
+  animation: sheet-up 0.32s var(--ease-brand);
+}
+
+.fade-in {
+  animation: fade-in 0.4s var(--ease-brand);
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .sheet-enter,
+  .fade-in {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
