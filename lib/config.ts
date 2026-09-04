@@ -24,11 +24,19 @@ export const SITE_URL = (
     : "https://achados-da-bia.vercel.app")
 ).replace(/\/$/, "");
 
-/** Dados do anunciante — exigidos pela revisão do Meta e pela LGPD. */
-export const EMPRESA = {
-  razaoSocial: "BIA SERRA ACHADOS",
-  nomeFantasia: "Bia Serra Achados",
-  cnpj: "00.000.000/0001-00", // TODO: substituir pelo CNPJ real
-  endereco: "Belo Horizonte, MG", // TODO: substituir pelo endereço completo
-  email: "contato@biaserra.com.br", // TODO: substituir pelo e-mail real de contato/DPO
+/**
+ * Identificação do responsável.
+ *
+ * CNPJ e endereço foram tirados do rodapé por enquanto (ainda não há empresa
+ * aberta). ATENÇÃO: o Meta pode reprovar a campanha sem identificação do
+ * anunciante, e a LGPD exige um canal de contato pra pedidos de exclusão de
+ * dados. Antes de escalar os anúncios, voltar com:
+ *   - CNPJ e endereço (ou nome + cidade do responsável, se pessoa física)
+ *   - um e-mail de contato de verdade (cadastrar NEXT_PUBLIC_CONTACT_EMAIL)
+ */
+export const MARCA = {
+  nome: "Achados da Bia",
+  responsavel: "Bia Serra Achados",
+  /** cadastre NEXT_PUBLIC_CONTACT_EMAIL na Vercel; vazio = mostra fallback */
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "",
 } as const;

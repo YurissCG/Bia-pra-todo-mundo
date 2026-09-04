@@ -1,4 +1,4 @@
-import { EMPRESA } from "@/lib/config";
+import { MARCA } from "@/lib/config";
 
 export function Footer() {
   return (
@@ -23,24 +23,27 @@ export function Footer() {
         </p>
 
         <p>
-          {EMPRESA.razaoSocial} · CNPJ {EMPRESA.cnpj}
-          <br />
-          {EMPRESA.endereco}
-          <br />
-          contato:{" "}
-          <a href={`mailto:${EMPRESA.email}`} className="underline">
-            {EMPRESA.email}
-          </a>
+          {MARCA.responsavel} · contato:{" "}
+          {MARCA.email ? (
+            <a href={`mailto:${MARCA.email}`} className="underline">
+              {MARCA.email}
+            </a>
+          ) : (
+            "pelo próprio grupo do WhatsApp"
+          )}
         </p>
 
         <p>
-          <a href="/privacidade" className="font-semibold text-framboesa underline">
+          <a
+            href="/privacidade"
+            className="font-semibold text-framboesa underline"
+          >
             Política de Privacidade
           </a>
         </p>
 
         <p className="text-ameixa/45">
-          © {new Date().getFullYear()} {EMPRESA.razaoSocial}. todos os direitos
+          © {new Date().getFullYear()} {MARCA.nome}. todos os direitos
           reservados.
         </p>
       </div>

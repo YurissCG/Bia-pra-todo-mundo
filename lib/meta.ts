@@ -11,7 +11,9 @@
 import { createHash } from "node:crypto";
 import { normalizeForHash } from "./validation";
 
-const GRAPH_VERSION = process.env.META_GRAPH_API_VERSION?.trim() || "v21.0";
+// v26.0 é a atual em set/2026 (v23 e anteriores já saíram do ar).
+// Trocar por env quando o Meta lançar uma nova.
+const GRAPH_VERSION = process.env.META_GRAPH_API_VERSION?.trim() || "v26.0";
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EMPRESA } from "@/lib/config";
+import { MARCA } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade — Achados da Bia",
@@ -8,7 +8,18 @@ export const metadata: Metadata = {
     "O que a gente coleta, para quê, com quem compartilha e como você pede exclusão dos seus dados.",
 };
 
-const ATUALIZADO_EM = "3 de setembro de 2026";
+const ATUALIZADO_EM = "4 de setembro de 2026";
+
+function Contato() {
+  if (MARCA.email) {
+    return (
+      <a href={`mailto:${MARCA.email}`} className="text-framboesa underline">
+        {MARCA.email}
+      </a>
+    );
+  }
+  return <span>o próprio grupo do WhatsApp</span>;
+}
 
 export default function PrivacidadePage() {
   return (
@@ -29,18 +40,14 @@ export default function PrivacidadePage() {
           <h2 className="mb-2 text-xl text-ameixa">1. quem é o responsável</h2>
           <p>
             Esta página e o grupo de WhatsApp &ldquo;Achados da Bia&rdquo; são
-            operados por <strong>{EMPRESA.razaoSocial}</strong>, CNPJ{" "}
-            {EMPRESA.cnpj}, com sede em {EMPRESA.endereco}. Para qualquer assunto
-            relacionado aos seus dados, fale com a gente em{" "}
-            <a href={`mailto:${EMPRESA.email}`} className="text-framboesa underline">
-              {EMPRESA.email}
-            </a>
-            .
+            operados pelo responsável pela operação{" "}
+            <strong>{MARCA.responsavel}</strong>. Para qualquer assunto
+            relacionado aos seus dados, fale com a gente por <Contato />.
           </p>
           <p className="mt-2">
             A &ldquo;Bia Serra&rdquo; é uma personagem criada com inteligência
-            artificial. O tratamento dos seus dados descrito aqui é feito pela
-            empresa responsável, uma pessoa jurídica real.
+            artificial. O tratamento dos seus dados descrito aqui é feito por uma
+            pessoa real responsável pela operação.
           </p>
         </section>
 
@@ -130,13 +137,11 @@ export default function PrivacidadePage() {
             Você pode pedir acesso, correção, portabilidade, informação sobre
             compartilhamento e, principalmente,{" "}
             <strong>exclusão dos seus dados</strong> e{" "}
-            <strong>retirada do consentimento</strong>. É só mandar um e-mail para{" "}
-            <a href={`mailto:${EMPRESA.email}`} className="text-framboesa underline">
-              {EMPRESA.email}
-            </a>{" "}
-            com o assunto &ldquo;meus dados&rdquo;. A gente responde em até 15
-            dias. Sair do grupo do WhatsApp também interrompe o envio das
-            mensagens, mas não apaga o cadastro — para isso, use o e-mail.
+            <strong>retirada do consentimento</strong>. É só entrar em contato por{" "}
+            <Contato /> com o assunto &ldquo;meus dados&rdquo;. A gente responde
+            em até 15 dias. Sair do grupo do WhatsApp também interrompe o envio
+            das mensagens, mas não apaga o cadastro — para isso, use o contato
+            acima.
           </p>
         </section>
 

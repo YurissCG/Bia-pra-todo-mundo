@@ -32,7 +32,11 @@ let cached: SupabaseClient | null = null;
 
 function getClient(): SupabaseClient | null {
   if (cached) return cached;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  // A integração Supabase da Vercel cria as duas: NEXT_PUBLIC_SUPABASE_URL e
+  // SUPABASE_URL. Aceita qualquer uma.
+  const url = (
+    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  )?.trim();
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key) return null;
   cached = createClient(url, key, {

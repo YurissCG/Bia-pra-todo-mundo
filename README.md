@@ -33,17 +33,24 @@ formulário responde com erro (o lead precisa ser gravado antes do redirect).
 | `NEXT_PUBLIC_META_PIXEL_ID` | cliente | sim, pro rastreamento |
 | `META_CAPI_ACCESS_TOKEN` | **servidor, secreto** | sim, pro rastreamento |
 | `META_TEST_EVENT_CODE` | servidor | só em dev |
-| `META_GRAPH_API_VERSION` | servidor | opcional (padrão `v21.0`) |
-| `NEXT_PUBLIC_SUPABASE_URL` | cliente | sim |
-| `SUPABASE_SERVICE_ROLE_KEY` | **servidor, secreto** | sim |
+| `META_GRAPH_API_VERSION` | servidor | opcional (padrão `v26.0`) |
+| `NEXT_PUBLIC_SUPABASE_URL` | cliente | sim (a integração da Vercel já cria; aceita `SUPABASE_URL` também) |
+| `SUPABASE_SERVICE_ROLE_KEY` | **servidor, secreto** | sim (a integração da Vercel já cria) |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | cliente | recomendada (LGPD / identificação do anunciante) |
 | `NEXT_PUBLIC_SITE_URL` | cliente | opcional (metadados/sitemap) |
 
 Nunca prefixe `META_CAPI_ACCESS_TOKEN` ou `SUPABASE_SERVICE_ROLE_KEY` com
 `NEXT_PUBLIC_`.
 
+> **CNPJ/endereço:** foram tirados do rodapé por enquanto. O Meta pode reprovar a
+> campanha sem identificação do anunciante — voltar com CNPJ + endereço (ou nome +
+> cidade do responsável) e um e-mail real antes de escalar os anúncios.
+
 ## Banco (Supabase)
 
-Rode uma vez, no SQL Editor: [`supabase/schema.sql`](./supabase/schema.sql).
+Rode uma vez, no SQL Editor do Supabase: [`supabase/schema.sql`](./supabase/schema.sql).
+A integração Vercel↔Supabase conecta o banco, mas **não cria a tabela `leads`** —
+esse passo é manual.
 
 ## Deploy (Vercel)
 
