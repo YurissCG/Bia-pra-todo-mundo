@@ -3,6 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // não deixa o `next dev` reescrever o CLAUDE.md (que é a spec do projeto)
+  agentRules: false,
   images: {
     formats: ["image/avif", "image/webp"],
   },
