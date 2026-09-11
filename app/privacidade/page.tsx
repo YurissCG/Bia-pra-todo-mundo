@@ -102,9 +102,19 @@ export default function PrivacidadePage() {
             <strong>Meta Platforms, Inc.</strong> (Facebook/Instagram): recebe o
             evento de clique, IP, user-agent e os cookies <code>_fbc</code>/
             <code>_fbp</code>, só pra medição de anúncio — nada disso identifica
-            você pelo nome. A gente não vende dado nenhum. O Meta pode processar
-            essas informações fora do Brasil, com as salvaguardas previstas na
-            LGPD.
+            você pelo nome.
+          </p>
+          <p className="mt-2">
+            <strong>Microsoft Clarity</strong> e <strong>Vercel Analytics</strong>:
+            registram como as pessoas navegam pela página (cliques, rolagem,
+            gravação de sessão) e métricas de velocidade, pra gente entender o que
+            está funcionando e o que travar o carregamento. Não pedem nem coletam
+            nome, telefone ou e-mail — como a página não tem formulário, não há
+            campo nenhum pra gravar.
+          </p>
+          <p className="mt-2">
+            A gente não vende dado nenhum. Esses parceiros podem processar as
+            informações fora do Brasil, com as salvaguardas previstas na LGPD.
           </p>
         </section>
 
@@ -112,9 +122,10 @@ export default function PrivacidadePage() {
           <h2 className="mb-2 text-xl text-ameixa">5. cookies</h2>
           <p>
             O Pixel do Meta grava os cookies <code>_fbc</code> e <code>_fbp</code>{" "}
-            no seu navegador pra atribuição de anúncio. Você pode bloquear ou
-            apagar cookies nas configurações do navegador; isso não impede o acesso
-            à página nem a entrada no grupo.
+            no seu navegador pra atribuição de anúncio; o Microsoft Clarity grava
+            cookies próprios pra reconhecer sua sessão de navegação. Você pode
+            bloquear ou apagar cookies nas configurações do navegador; isso não
+            impede o acesso à página nem a entrada no grupo.
           </p>
         </section>
 

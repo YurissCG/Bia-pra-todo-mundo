@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black } from "next/font/google";
 import Script from "next/script";
-import { META_PIXEL_ID, SITE_URL } from "@/lib/config";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { META_PIXEL_ID, CLARITY_PROJECT_ID, SITE_URL } from "@/lib/config";
 import "./globals.css";
 
 const displayFont = Archivo_Black({
@@ -57,6 +59,14 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 fbq('init','${META_PIXEL_ID}');
 fbq('track','PageView');`;
 
+// Mapa de calor + gravação de sessão. Script pequeno, async, carrega depois
+// do conteúdo — não entra na conta do LCP.
+const clarityBoot = `(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");`;
+
 export default function RootLayout({
   children,
 }: {
@@ -87,7 +97,16 @@ export default function RootLayout({
           </>
         ) : null}
 
+        {CLARITY_PROJECT_ID ? (
+          <Script id="ms-clarity" strategy="afterInteractive">
+            {clarityBoot}
+          </Script>
+        ) : null}
+
         {children}
+
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

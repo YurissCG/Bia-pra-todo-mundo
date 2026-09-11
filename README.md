@@ -49,6 +49,7 @@ Sem formulário, não tem dado pessoal pra mandar pro Meta. O que existe:
 | `META_CAPI_ACCESS_TOKEN` | **servidor, secreto** | sim, pro rastreamento |
 | `META_TEST_EVENT_CODE` | servidor | só em dev |
 | `META_GRAPH_API_VERSION` | servidor | opcional (padrão `v26.0`) |
+| `NEXT_PUBLIC_CLARITY_PROJECT_ID` | cliente | recomendada (mapa de calor) |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | cliente | recomendada (LGPD / identificação do anunciante) |
 | `NEXT_PUBLIC_SITE_URL` | cliente | opcional (metadados/sitemap) |
 
@@ -57,6 +58,30 @@ Nunca prefixe `META_CAPI_ACCESS_TOKEN` com `NEXT_PUBLIC_`.
 > **CNPJ/endereço:** foram tirados do rodapé por enquanto. O Meta pode reprovar a
 > campanha sem identificação do anunciante — voltar com CNPJ + endereço (ou nome +
 > cidade do responsável) antes de escalar os anúncios.
+
+## Analytics — visitas, velocidade e mapa de calor
+
+Três camadas, todas leves (nada bloqueia o carregamento nem entra na conta do
+LCP):
+
+- **Vercel Analytics** (`<Analytics />`) e **Vercel Speed Insights**
+  (`<SpeedInsights />`) — já ativos, sem precisar de conta separada nem chave.
+  Aparecem sozinhos no painel da Vercel (abas *Analytics* e *Speed Insights*)
+  assim que o site tiver tráfego real — não funcionam em `localhost`, só em
+  produção na Vercel.
+- **Microsoft Clarity** — mapa de calor, "rage clicks" e gravação de sessão.
+  Precisa de cadastro (grátis, ~2 minutos):
+  1. Entra em [clarity.microsoft.com](https://clarity.microsoft.com) → *Sign up*
+     → *Add new project* → cola a URL do site.
+  2. Copia o **Project ID** (aparece em *Settings* → *Setup*, ou na própria URL
+     do projeto).
+  3. Cadastra `NEXT_PUBLIC_CLARITY_PROJECT_ID` na Vercel com esse valor → Redeploy.
+  4. Depois de algumas visitas, o mapa de calor e as gravações aparecem no
+     próprio dashboard do Clarity.
+
+  Cada clique de CTA marca a sessão no Clarity com a tag `cta_source`
+  (`hero`/`cta2`/`cta3`/`sticky`) — dá pra filtrar gravação e mapa de calor por
+  qual botão a pessoa usou.
 
 ## Deploy (Vercel)
 

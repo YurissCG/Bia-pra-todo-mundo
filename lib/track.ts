@@ -15,6 +15,7 @@
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
+    clarity?: (...args: unknown[]) => void;
   }
 }
 
@@ -37,6 +38,15 @@ export function fireContactEvent(source: string) {
     window.fbq?.("track", "Contact", { content_name: source }, { eventID: eventId });
   } catch {
     /* pixel bloqueado — a chamada pra CAPI abaixo ainda cobre */
+  }
+
+  try {
+    // marca a sessão no Clarity com qual CTA converteu (hero/cta2/cta3/sticky)
+    // — dá pra filtrar gravação e mapa de calor por posição de botão.
+    window.clarity?.("set", "cta_source", source);
+    window.clarity?.("event", "cta_click");
+  } catch {
+    /* Clarity pode não estar carregado ainda — não é crítico */
   }
 
   try {

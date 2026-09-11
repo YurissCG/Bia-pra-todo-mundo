@@ -15,6 +15,12 @@ export const WHATSAPP_GROUP_URL =
 
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
 
+/** Mapa de calor + gravação de sessão (Microsoft Clarity, gratuito).
+ *  Cadastre NEXT_PUBLIC_CLARITY_PROJECT_ID na Vercel — sem isso, simplesmente
+ *  não carrega nada (mesmo padrão do Pixel). */
+export const CLARITY_PROJECT_ID =
+  process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID?.trim() || "";
+
 /** URL pública do site. Em produção, cadastre NEXT_PUBLIC_SITE_URL na Vercel
  *  (ou o domínio próprio). O fallback serve só pro primeiro deploy. */
 export const SITE_URL = (
