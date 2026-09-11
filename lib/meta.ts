@@ -1,5 +1,5 @@
 /**
- * Conversions API do Meta — envio do evento `Contact` pelo servidor.
+ * Conversions API do Meta — envio de evento pelo servidor.
  *
  * Sem formulário, não tem telefone nem nome pra hashear — o pareamento aqui
  * é só com fbc/fbp/ip/user-agent (mais fraco que um Lead com `ph`, mas ainda
@@ -11,6 +11,9 @@
 
 // v26.0 é a atual em set/2026. Trocar por env quando o Meta lançar uma nova.
 const GRAPH_VERSION = process.env.META_GRAPH_API_VERSION?.trim() || "v26.0";
+
+/** Eventos que a LP dispara. `Contact` = clicou pra ir pro WhatsApp. */
+export type CapiEventName = "Contact" | "ViewContent";
 
 /** Só adiciona a chave se o valor existir de verdade. */
 function put(obj: Record<string, unknown>, key: string, value: unknown) {
@@ -27,19 +30,27 @@ export type CapiEventInput = {
   fbp?: string;
   clientIp?: string;
   clientUserAgent?: string;
+  /** vira content_name — pra saber qual CTA converteu */
+  contentName?: string;
 };
 
 export type CapiResult =
   | { ok: true; fbtraceId?: string; eventsReceived?: number }
   | { ok: false; error: string };
 
-export async function sendContactToCapi(input: CapiEventInput): Promise<CapiResult> {
+export async function sendEventToCapi(
+  eventName: CapiEventName,
+  input: CapiEventInput,
+): Promise<CapiResult> {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
   const token = process.env.META_CAPI_ACCESS_TOKEN?.trim();
   const testCode = process.env.META_TEST_EVENT_CODE?.trim();
 
   if (!pixelId || !token) {
-    return { ok: false, error: "NEXT_PUBLIC_META_PIXEL_ID ou META_CAPI_ACCESS_TOKEN ausente" };
+    return {
+      ok: false,
+      error: "NEXT_PUBLIC_META_PIXEL_ID ou META_CAPI_ACCESS_TOKEN ausente",
+    };
   }
 
   const userData: Record<string, unknown> = {};
@@ -49,13 +60,16 @@ export async function sendContactToCapi(input: CapiEventInput): Promise<CapiResu
   put(userData, "client_user_agent", input.clientUserAgent);
 
   const eventData: Record<string, unknown> = {
-    event_name: "Contact",
+    event_name: eventName,
     event_time: input.eventTimeSeconds,
     event_id: input.eventId,
     action_source: "website",
     user_data: userData,
   };
   put(eventData, "event_source_url", input.eventSourceUrl);
+  if (input.contentName) {
+    eventData.custom_data = { content_name: input.contentName };
+  }
 
   const payload: Record<string, unknown> = { data: [eventData] };
   if (testCode) payload.test_event_code = testCode;
@@ -69,7 +83,7 @@ export async function sendContactToCapi(input: CapiEventInput): Promise<CapiResu
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(5000),
     });
 
     const json = (await res.json()) as {

@@ -81,7 +81,11 @@ export default function RootLayout({
 
         {META_PIXEL_ID ? (
           <>
-            <Script id="fb-pixel" strategy="afterInteractive">
+            {/* beforeInteractive: o PageView entra na fila no primeiro paint,
+                não depois da hidratação. O fbevents.js continua baixando
+                async, então isso não atrasa o LCP — mas recupera as visitas
+                de quem sai da página antes do React hidratar. */}
+            <Script id="fb-pixel" strategy="beforeInteractive">
               {pixelBoot}
             </Script>
             <noscript>

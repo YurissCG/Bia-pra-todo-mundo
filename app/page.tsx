@@ -6,6 +6,7 @@ import { SocialProof } from "@/components/SocialProof";
 import { Footer } from "@/components/Footer";
 import { CtaButton } from "@/components/CtaButton";
 import { StickyCta } from "@/components/StickyCta";
+import { EngagementTracker } from "@/components/EngagementTracker";
 import { Reveal } from "@/components/Reveal";
 
 export default function Page() {
@@ -70,6 +71,7 @@ export default function Page() {
       <Footer />
 
       <StickyCta />
+      <EngagementTracker />
     </>
   );
 }

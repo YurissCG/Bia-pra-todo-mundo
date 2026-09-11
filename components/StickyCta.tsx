@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
-import { WHATSAPP_GROUP_URL } from "@/lib/config";
-import { fireContactEvent } from "@/lib/track";
+import { fireContactPixel, newEventId } from "@/lib/track";
 
 /**
  * CTA fixo na base — só no mobile, e só depois que o usuário passa do
@@ -11,6 +10,11 @@ import { fireContactEvent } from "@/lib/track";
  */
 export function StickyCta() {
   const [visible, setVisible] = useState(false);
+  const [eventId, setEventId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setEventId(newEventId());
+  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -44,10 +48,14 @@ export function StickyCta() {
       }`}
     >
       <a
-        href={WHATSAPP_GROUP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => fireContactEvent("sticky")}
+        href={
+          eventId
+            ? `/entrar?src=sticky&eid=${encodeURIComponent(eventId)}`
+            : "/entrar?src=sticky"
+        }
+        onClick={() => {
+          if (eventId) fireContactPixel(eventId, "sticky");
+        }}
         className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-wa px-6 py-4 text-lg font-bold text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,0.6)] transition-transform duration-150 active:scale-[0.98] min-h-[56px]"
       >
         <WhatsAppIcon className="h-6 w-6 shrink-0" />

@@ -1,15 +1,12 @@
 /**
- * Disparo do evento `Contact` quando o visitante clica pra ir pro WhatsApp.
+ * Eventos do navegador (Pixel) — a metade "browser" da redundância.
  *
- * Não existe mais formulário nem captura de nome/telefone (decisão de
- * 4/set/2026 — ver amendment no topo do CLAUDE.md), então não tem `Lead`
- * pareado com hash de telefone/nome. O que dá pra fazer, e que o Meta
- * recomenda mesmo sem dado pessoal, é mandar o MESMO evento por dois
- * caminhos — Pixel (navegador) e Conversions API (servidor) — com o mesmo
- * `event_id`, pra sobreviver a bloqueador de anúncio e ao iOS.
- *
- * Nunca atrasa a navegação: o clique já abre o WhatsApp; isso aqui é
- * melhor esforço, com `keepalive` pra sobreviver mesmo que a aba mude.
+ * Divisão de responsabilidade:
+ *  - `Contact`: o servidor é a fonte da verdade (rota /entrar, que dispara a
+ *    CAPI e redireciona). Aqui só o Pixel, com o MESMO event_id da URL, pra
+ *    deduplicar. Se o JS falhar, o servidor cobre sozinho.
+ *  - `ViewContent`: só existe no navegador (é sinal de engajamento), então
+ *    dispara Pixel + manda pra CAPI via /api/track.
  */
 
 declare global {
@@ -19,34 +16,45 @@ declare global {
   }
 }
 
+export function newEventId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
   const hit = document.cookie.split("; ").find((row) => row.startsWith(name + "="));
   return hit ? decodeURIComponent(hit.split("=").slice(1).join("=")) : null;
 }
 
-function newEventId(): string {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-export function fireContactEvent(source: string) {
+/** Clique no CTA: Pixel + tag no Clarity. A CAPI é feita pela rota /entrar. */
+export function fireContactPixel(eventId: string, source: string) {
   if (typeof window === "undefined") return;
-  const eventId = newEventId();
 
   try {
     window.fbq?.("track", "Contact", { content_name: source }, { eventID: eventId });
   } catch {
-    /* pixel bloqueado — a chamada pra CAPI abaixo ainda cobre */
+    /* Pixel bloqueado — a rota /entrar cobre pelo servidor */
   }
 
   try {
     // marca a sessão no Clarity com qual CTA converteu (hero/cta2/cta3/sticky)
-    // — dá pra filtrar gravação e mapa de calor por posição de botão.
     window.clarity?.("set", "cta_source", source);
     window.clarity?.("event", "cta_click");
   } catch {
-    /* Clarity pode não estar carregado ainda — não é crítico */
+    /* Clarity pode não estar carregado — não é crítico */
+  }
+}
+
+/** Engajamento real na página (5s ou 25% de rolagem): Pixel + CAPI. */
+export function fireViewContent() {
+  if (typeof window === "undefined") return;
+  const eventId = newEventId();
+
+  try {
+    window.fbq?.("track", "ViewContent", {}, { eventID: eventId });
+  } catch {
+    /* a chamada pra CAPI abaixo ainda cobre */
   }
 
   try {
@@ -55,6 +63,7 @@ export function fireContactEvent(source: string) {
       headers: { "Content-Type": "application/json" },
       keepalive: true,
       body: JSON.stringify({
+        eventName: "ViewContent",
         eventId,
         eventSourceUrl: window.location.href,
         fbc: readCookie("_fbc"),
@@ -62,6 +71,6 @@ export function fireContactEvent(source: string) {
       }),
     }).catch(() => {});
   } catch {
-    /* melhor esforço — nunca trava o clique */
+    /* melhor esforço */
   }
 }
